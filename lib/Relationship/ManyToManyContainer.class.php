@@ -17,39 +17,34 @@
  ************************************************************************************************/
 
 /**
- * @ingroup OrmExpression
+ * @ingroup Orm_Dao
  */
-abstract class SingleRowEntityPropertyExpression extends EntityPropertyExpression
+abstract class ManyToManyContainer extends Container
 {
 	/**
-	 * @return IDalExpression
+	 * @var ManyToManyContainerPropertyType
 	 */
-	protected function getSqlColumn()
-	{
-		$columns = $this->getEntityProperty()->getDBFields();
-
-		Assert::isTrue(sizeof($columns) == 1);
-
-		return new SqlColumn(
-			reset($columns),
-			$this->getTable()
-		);
-	}
+	private $mtm;
 
 	/**
-	 * @return ISqlValueExpression
+	 * @param OrmEntity $parent
+	 * @param OrmMap $children
+	 * @param boolean $partialFetch
 	 */
-	protected function getSqlValue($value)
+	function __construct(
+			IdentifiableOrmEntity $parent,
+			IQueryable $children,
+			ManyToManyContainerPropertyType $proxy
+		)
 	{
-		if ($value instanceof ISqlValueExpression) {
-			return $value;
-		}
-
-		if ($value instanceof EntityProperty) {
-			return reset($value->getSqlColumns());
-		}
-
-		return reset($this->makeRawValue($value));
+		parent::__construct($parent, $children);
+		$this->setWorker(
+			new ManyToManyFullWorker(
+				$parent,
+				$children,
+				$proxy
+			)
+		);
 	}
 }
 

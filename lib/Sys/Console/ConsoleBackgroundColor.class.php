@@ -17,26 +17,20 @@
  ************************************************************************************************/
 
 /**
- * Represents a postfix unary expression
- * @ingroup OrmExpression
+ * @ingroup Utils_Sys
  */
-class UnaryPostfixEntityPropertyExpression extends SingleRowEntityPropertyExpression
+class ConsoleBackgroundColor extends Enumeration
 {
-	function __construct($table, OrmProperty $property, UnaryPostfixExpression $expression)
-	{
-		parent::__construct($table, $property, $expression);
-	}
+	const BLACK = 40;
+	const RED = 41;
+	const GREEN = 42;
+	const BROWN = 43;
+	const BLUE = 44;
+	const MAGENTA = 45;
+	const CYAN = 46;
+	const WHITE = 47;
 
-	/**
-	 * @return IDalExpression
-	 */
-	function toDalExpression()
-	{
-		return new UnaryPostfixDalExpression(
-			$this->getSqlColumn(),
-			$this->getExpression()
-		);
-	}
+	// unused background: 49
 }
 
 ?>

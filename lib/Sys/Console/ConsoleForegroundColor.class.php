@@ -17,14 +17,20 @@
  ************************************************************************************************/
 
 /**
- * @ingroup OrmExpression
+ * @ingroup Utils_Sys
  */
-interface IEntityPropertyExpression
+class ConsoleForegroundColor extends Enumeration
 {
-	/**
-	 * @return IDalExpression
-	 */
-	function toDalExpression();
+	const BLACK = 30;
+	const RED = 31;
+	const GREEN = 32;
+	const BROWN = 33;
+	const BLUE = 34;
+	const MAGENTA = 35;
+	const CYAN = 36;
+	const WHITE = 37;
+
+	// unused foregrounds: 38, 39
 }
 
 ?>

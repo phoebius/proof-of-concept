@@ -17,27 +17,42 @@
  ************************************************************************************************/
 
 /**
- * Represents a unary prefix expression
- * @ingroup OrmExpression
+ * @ingroup Orm_Dao
  */
-class PrefixUnaryEntityPropertyExpression extends SingleRowEntityPropertyExpression
+class OneToManyFullWorker extends OneToManyWorker
 {
-	function __construct($table, OrmProperty $property, PrefixUnaryExpression $expression)
+	/**
+	 * @return void
+	 */
+	function syncronizeObjects(array $insert, array $update, array $delete)
 	{
-		parent::__construct($table, $property, $expression);
+		if (!empty($delete)) {
+			$ids = array();
+
+			foreach ($delete as $id) {
+				$ids[] = $id->getId();
+			}
+
+			$this->children->getDao()->dropByIds($ids);
+		}
+
+		foreach ($insert as $object) {
+			$this->children->getDao()->save($object);
+		}
+
+		foreach ($update as $object) {
+			$this->children->getDao()->save($object);
+		}
+
+		return $this;
 	}
 
 	/**
-	 * @return IDalExpression
+	 * @return array
 	 */
-	function toDalExpression()
+	function getList()
 	{
-		return new PrefixUnaryDalExpression(
-			new PrefixUnaryExpression(
-				$this->getExpression()->getLogicalOperator(),
-				$this->getSqlColumn()
-			)
-		);
+		return $this->children->getDao()->getListBy($this->getParentsChildrenExpression());
 	}
 }
 

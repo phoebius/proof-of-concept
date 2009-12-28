@@ -17,33 +17,36 @@
  ************************************************************************************************/
 
 /**
- * Represents the IN expression used in query logic
- * @ingroup OrmExpression
+ * @ingroup Utils_Cipher
  */
-class InSetEntityPropertyExpression extends SingleRowEntityPropertyExpression
+class ImageFileUtils extends StaticClass
 {
-	function __construct($table, OrmProperty $property, InSetExpression $expression)
-	{
-		parent::__construct($table, $property, $expression);
-	}
-
 	/**
-	 * @return IDalExpression
+	 * @param string $file путь к файлу
+	 * @return bool|ImageFile
 	 */
-	function toDalExpression()
+	static function isImage(
+			$filename,
+			array $supportedImageTypes = array(
+				IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_JPEG2000, IMAGETYPE_PNG
+			)
+		)
 	{
-		$sqlValues = array();
-		foreach ($this->getExpression()->getValue() as $value) {
-			$sqlValues[] = $this->getSqlValue($value);
+		try {
+			$image = new ImageFile($filename);
+		}
+		catch (Exception $e) {
+			return false;
 		}
 
-		return new InSetDalExpression(
-			$this->getSqlColumn(),
-			new InSetExpression(
-				$sqlValues,
-				$this->getExpression()->getLogicalOperator()
-			)
-		);
+		if (
+				empty($supportedImageTypes)
+				|| in_array($image->getType(), $supportedImageTypes)
+		) {
+			return $image;
+		}
+
+		return false;
 	}
 }
 

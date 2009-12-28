@@ -17,29 +17,36 @@
  ************************************************************************************************/
 
 /**
- * FIXME: reimplement this class to support multi-field properties
- * Represents binary expression
- * @ingroup OrmExpression
+ * @ingroup Utils_Sys
  */
-class BinaryEntityPropertyExpression extends SingleRowEntityPropertyExpression
+final class RawConsoleOutput extends ConsoleOutput
 {
-	function __construct(EntityProperty $ep, BinaryExpression $expression)
+	/**
+	 * @return RawConsoleOutput
+	 */
+	function setMode(
+			ConsoleAttribute $attribute,
+			ConsoleForegroundColor $foreground,
+			ConsoleBackgroundColor $background
+		)
 	{
-		parent::__construct($ep, $expression);
+		return $this;
 	}
 
 	/**
-	 * @return IDalExpression
+	 * @return ConsoleOutput
 	 */
-	function toDalExpression()
+	function setDefaultMode()
 	{
-		return new BinaryDalExpression(
-			$this->getSqlColumn(),
-			new BinaryExpression(
-				$this->getExpression()->getLogicalOperator(),
-				$this->getSqlValue($this->getExpression()->getValue())
-			)
-		);
+		return $this;
+	}
+
+	/**
+	 * @return RawConsoleOutput
+	 */
+	function resetAll()
+	{
+		return $this;
 	}
 }
 

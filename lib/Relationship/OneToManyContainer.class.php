@@ -17,27 +17,20 @@
  ************************************************************************************************/
 
 /**
- * Represents an range expression
- * @ingroup OrmExpression
+ * @ingroup Orm_Dao
  */
-class BetweenRangeEntityPropertyExpression extends SingleRowEntityPropertyExpression
+abstract class OneToManyContainer extends Container
 {
-	function __construct($table, OrmProperty $property, BetweenRangeExpression $expression)
-	{
-		parent::__construct($table, $property, $expression);
-	}
-
 	/**
-	 * @return BetweenRangeDalExpression
+	 * @return OrmProperty
 	 */
-	function toDalExpression()
-	{
-		return DalExpression::between(
-			$this->getSqlColumn(),
-			$this->getSqlValue($this->expression->getFrom()),
-			$this->getSqlValue($this->expression->getTo())
+	abstract function getReferentialProperty();
 
-		);
+	function __construct(OrmEntity $parent, OrmMap $children)
+	{
+		parent::__construct($parent, $children);
+
+		$this->setWorker(new OneToManyFullWorker($parent, $children, $this->getReferentialProperty()));
 	}
 }
 
